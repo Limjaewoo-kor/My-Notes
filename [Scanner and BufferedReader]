@@ -1,0 +1,26 @@
+[Scanner and BufferedReader]
+
+
+Scanner
+
+//Scanner를 사용했을시 입력 형태.
+Scanner sc = new Scanner(System.in);
+
+int n = sc.nextInt(); // int
+long l = sc.nextLong(); // int
+String s = sc.next(); // String
+String s = sc.nextLine(); // String
+
+
+
+BufferedReader
+
+BufferedReader br = new BufferedReader(new InputStreamReader(System.in);
+StringTokenizer st = new StringTokenizer(br.readLine());
+
+// AB CDD EFFF GH 입력
+
+st.nextToken() // AB
+st.nextToken() // CDD
+st.nextToken() // EFFF
+st.nextToken() // GH
