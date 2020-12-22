@@ -1,0 +1,35 @@
+ORACLE DB
+
+
+SELECT  PRO_NAME FROM  jw_product WHERE origin IN (SELECT  origin FROM jw_product WHERE  origin = '중국산');        /* 서브 쿼리 */
+
+select ORIGIN,COUNT(*),sum(PRO_ID) from jw_product group by origin;                                                /* group by */
+
+select b.PRO_id, b.PRO_name, b.origin, b.weight, b.com_key from jw_company a join jw_product b on (a.ID = b.com_key) and a.ID=1 ;  /* JOIN */
+
+
+JOIN할때 ON과 WHERE 중 어디에 조건을 줘야 효과적일까?
+
+ANSI 표준에 따른 코딩에서는 조인 조건을 ON절에 달아주고, WHERE절에는 검색조건을 달게 됩니다. 
+ON에 검색조건을 달아도 쿼리 실행에는 상관없으나,
+ON절에 조건을 주면, 테이블을 합칠 때 조건이 걸려서 하나의 가상테이블이 만들어집니다. 
+그와 반대로 WHERE절에 조건이 걸리면, 다 만들어진 테이블을 다시 훑으면서 해당 조건에 맞는 결과물을 반환하는 게 됩니다. 
+
+
+Oracle DB에서 BOOLEAN을 표현하려면??
+오라클에는 Boolean 자료형이 따로 존재하지않기때문에,
+True,False는 "1","0"을 이용하여 CHAR(1)타입으로 저장한다.
+
+
+현재 시간 저장시에는 SYSDATE사용.
+Mapping 오류시 #{파라미터, jdbcType=타입}
+ex)
+    <update id="updatejw" parameterType="java.util.Map">
+		UPDATE JW_COMPANY
+		SET
+		 NAME = #{NAME}
+		 ,KINDS = #{KINDS, jdbcType=VARCHAR}
+		 ,TEL = #{TEL, jdbcType=VARCHAR}
+		 ,CREATE_DATE = SYSDATE                         //SYSDATE 사용.
+		 WHERE ID =  #{ID,jdbcType=VARCHAR}
+    </update>
