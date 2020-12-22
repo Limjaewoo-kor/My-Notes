@@ -60,3 +60,25 @@ select *
 select * 
   from 테이블명 as of timestamp(systimestamp-interval '2' day);
 - 이틀 전
+
+--------------------------------------------------------------조회 및 살리기 쿼리-------------
+-- 실수로 지운 데이터 조회하기 (10분전 데이터 조회)
+
+SELECT * FROM employees
+
+ AS OF TIMESTAMP ( SYSTIMESTAMP - INTERVAL '10' MINUTE)
+
+WHERE no = '7'
+
+ 
+
+-- 실수로 지운데이터 살리기
+
+INSERT INTO employees
+
+SELECT * FROM employees
+
+ AS OF TIMESTAMP ( SYSTIMESTAMP - INTERVAL '10' MINUTE)
+
+WHERE no = '7'
+
