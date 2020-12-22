@@ -33,3 +33,30 @@ ex)
 		 ,CREATE_DATE = SYSDATE                         //SYSDATE 사용.
 		 WHERE ID =  #{ID,jdbcType=VARCHAR}
     </update>
+
+
+Commit, Rollback, Savepoint
+
+Commit - 현재 상태로 저장(되돌릴수없음).
+
+Rollback - Delete나 Update후 Commit을 안했다면 되돌릴수있음. 가장 최근 Commit 및 Savepoint로 돌아감.
+
+Savepoint - Rollback 할 수 있도록 위치를 정해놓음.
+
+
+------------------------------------------------Commit 후 복구 하는법. --------------------------------------------
+
+오라클은 UNDO tablespace를 가지고 있는데, Commit이 된 후 부터 일정 시간동안 임시로 테이블을 저장하고 있다. 얼마나 오래 유지 할 것인가는 Undo Table속성에서 정할 수 있다. 
+
+만약 커밋 후 15분 전 데이터를 보고 싶다면 아래와 sql쿼리를 날려본다. 
+select *
+  from 테이블명 as of timestamp(systimestamp-interval '15' minute);
+
+이것을 시간 단위, day 단위로 할 수 있다. 
+
+select * 
+  from 테이블명 as of timestamp(systimestamp-interval '1' hour);
+- 1시간 전
+select * 
+  from 테이블명 as of timestamp(systimestamp-interval '2' day);
+- 이틀 전
