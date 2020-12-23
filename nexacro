@@ -8,3 +8,38 @@ nexacro 커뮤니티(정보)
 https://www.playnexacro.com
 
 
+
+//이미지 파일 미리보기
+this.Grid02_oncellclick = function(obj:nexacro.Grid,e:nexacro.GridClickEventInfo)
+{
+	var id = (this.dsFileListdown.rowposition);
+	var filename= (this.dsFileListdown.getColumn(id,"REALFILENAME"));
+	this.ImgView.set_image("URL('http://localhost:8080/images/imgjw/"+filename+"')");
+}
+
+this.Button00_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	this.go("lim::lim.xfdl");
+	                          
+};
+
+
+//팝업 관련
+this.lim_onload = function(obj:nexacro.Form,e:nexacro.LoadEventInfo)
+{
+    this.PopupDiv00.trackPopup(600, 200, 300, 300);
+	
+};
+
+this.PopupDiv00_onclick = function(obj:nexacro.PopupDiv,e:nexacro.ClickEventInfo)
+{
+	this.PopupDiv00.closePopup();
+};
+
+
+// form 페이지 이동
+this.Button00_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	this.go("lim::ljw.xfdl");
+	                          
+};
