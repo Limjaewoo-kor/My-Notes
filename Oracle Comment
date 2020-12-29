@@ -1,0 +1,53 @@
+Oracle Comment
+
+Comment 설정
+
+--테이블 Comment 설정
+COMMENT ON TABLE [테이블명] IS [Comment];
+COMMENT ON TABLE EX_TABLE IS '예제 테이블';
+
+--컬럼 Comment 설정
+COMMENT ON COLUMN [테이블명].[컬럼명] IS '[Comment]';
+COMMENT ON COLUMN EX_TABLE.DEPT IS '부서';
+COMMENT ON COLUMN EX_TABLE.TP IS '유형';
+
+
+Comment 확인
+
+--테이블 전체 comment 조회
+SELECT  table_name, table_type, comments FROM USER_TAB_COMMENTS WHERE comments IS NOT NULL; 
+
+--컬럼 전체 comment 조회
+SELECT table_name, column_name, comments FROM USER_COL_COMMENTS WHERE comments IS NOT NULL; 
+
+--각 테이블과 컬럼 comment 조회
+SELECT
+T1.*
+FROM (
+SELECT
+A.TABLE_NAME
+,B.COMMENTS AS TABLE_COMMENTS
+,C.COLUMN_NAME
+,C.COMMENTS AS COLUMN_COMMENTS
+FROM ALL_TABLES A
+,ALL_TAB_COMMENTS B
+,ALL_COL_COMMENTS C
+WHERE 1=1
+AND A.TABLE_NAME = B.TABLE_NAME
+AND A.TABLE_NAME = C.TABLE_NAME
+) T1
+WHERE 1=1
+AND T1.TABLE_COMMENTS LIKE ‘%’|| :V_LIKE_TABLE_COMMENTS || ‘%’
+AND T1.COLUMN_COMMENTS LIKE ‘%’|| :V_LIKE_COLUMN_COMMENTS || ‘%’
+
+
+Comment 삭제
+
+--테이블 Comment 삭제
+COMMENT ON [테이블명] IS '';
+COMMENT ON EX_TABLE IS '';
+
+--컬럼 Comment 삭제
+COMMENT ON COLUMN [테이블명].[컬럼명] IS ''; 
+COMMENT ON COLUMN EX_TABLE.DEPT IS ''; 
+Comment 수정의 경우 '' 대신 바꾸고싶은 Comment를 입력해주시면 됩니다.
