@@ -1,0 +1,19 @@
+Oracle
+EXISTS와 IN 함수의 차이
+
+
+1. 성능 
+EXISTS : 조건에 해당하는 ROW의 존재유무만 체크 후 더이상 수행하지않음.
+	SELECT절을 평가하지 않으므로 일반적으로 IN에 비해 성능이 좋다.
+IN :  조건에 해당하는 ROW의 칼럼을 비교하여 체크.
+	SELECT절에서 조회한 컬럼 값으로 비교하므로 EXISTS에 비해 성능이 떨어짐.
+
+2. 실행순서
+
+- EXISTS : 메인 쿼리의 결과값을 서브쿼리에 대입하여 조건 비교후 결과 출력. 메인쿼리->EXISTS쿼리
+
+- IN : 서브쿼리의 결과값을 메인 쿼리에 대입하여 조건 비교 후 결과 출력. IN쿼리->메인쿼리
+
+3. NOT IN과 NOT EXISTS의 null 값에 대한 처리
+-NOT EXISTS : NULL 데이터에 대해 TRUE를 리턴.
+-NOT IN : NULL 데이터에 대해 FALSE를 
