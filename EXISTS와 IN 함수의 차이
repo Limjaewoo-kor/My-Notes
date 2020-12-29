@@ -16,4 +16,4 @@ IN :  조건에 해당하는 ROW의 칼럼을 비교하여 체크.
 
 3. NOT IN과 NOT EXISTS의 null 값에 대한 처리
 -NOT EXISTS : NULL 데이터에 대해 TRUE를 리턴.
--NOT IN : NULL 데이터에 대해 FALSE를 
+-NOT IN : NULL 데이터에 대해 FALSE를 리턴. [ NULL 처리를 하지 않을 경우 누락 발생]
