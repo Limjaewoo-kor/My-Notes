@@ -82,3 +82,81 @@ SELECT * FROM employees
 
 WHERE no = '7'
 
+
+
+
+----------------------------------------------------개인 참고 사항--------------------------------
+SELECT * FROM JW_company WHERE 1=1 ORDER BY ID ASC;
+ DELETE FROM JW_product;
+DELETE FROM JW_company;
+delete from jw_file;
+ 
+ drop table JW_product;
+ drop table JW_company;
+ DROP SEQUENCE JW_COMPANY_SEQ;
+ DROP SEQUENCE JW_PRODUCT_SEQ;
+    
+
+CREATE TABLE JW_Member(NO VARCHAR(30) NOT NULL PRIMARY KEY, ID VARCHAR(50) ,PASSWORD VARCHAR(30),CREATE_DATE DATE); 
+CREATE TABLE JW_company(ID VARCHAR(30) NOT NULL PRIMARY KEY, NAME VARCHAR(50) ,KINDS VARCHAR(30) ,TEL VARCHAR(30) ,CREATE_DATE DATE ); 
+CREATE TABLE JW_product(PRO_ID VARCHAR(30) NOT NULL PRIMARY KEY, PRO_NAME VARCHAR(50) ,ORIGIN VARCHAR(30) ,WEIGHT VARCHAR(10) , com_key VARCHAR(30) );
+ALTER TABLE JW_product ADD CONSTRAINT fk_bbs_id FOREIGN KEY(com_key) REFERENCES JW_company(ID);
+CREATE SEQUENCE JW_COMPANY_SEQ;
+CREATE SEQUENCE JW_PRODUCT_SEQ;
+CREATE SEQUENCE JW_Member_SEQ;
+
+insert into JW_company values('1','농협','1','010','2020-01-01');
+insert into JW_company values('2','농협','1','010','2020-01-01');
+insert into JW_company values('3','농협','1','010','2020-01-01');
+insert into JW_company values('4','농협','1','010','2020-01-01');
+insert into JW_product values('1','당근','국산','20kg','1');
+insert into JW_product values('2','오이','국산','20kg','1');
+insert into JW_product values('3','오이','국산','20kg','3');
+insert into JW_Member values('1','admin','admin','2020-01-01');
+
+select * from jw_company;
+select * from jw_product;
+SELECT  PRO_NAME FROM jw_product WHERE origin in (SELECT  origin FROM jw_product WHERE  origin = '중국산');        
+select ORIGIN,COUNT(*),sum(PRO_ID) from jw_product group by origin;                                               
+select b.PRO_id, b.PRO_name, b.origin, b.weight, b.com_key from jw_company a join jw_product b on (a.ID = b.com_key) and a.ID=1 ; 
+SELECT * FROM USER_SEQUENCES;
+
+select nvl(pro_id, null) from jw_product where pro_id = 6;
+
+
+
+		UPDATE JW_COMPANY
+		SET
+		 NAME = '호호'
+		 ,KINDS = '01'
+		 ,TEL = '010'
+		 WHERE ID = 6;
+         
+         UPDATE JW_PRODUCT
+		SET
+    
+        PRO_NAME = '당근3'
+		 ,ORIGIN = '국산'
+		 ,WEIGHT = '20kg'
+         ,COM_KEY = '1'
+		 WHERE PRO_ID = 1;
+
+
+UPDATE JW_COMPANY
+		SET
+		 NAME = '농협'
+		 ,KINDS = 1
+		 ,TEL = 010
+		 WHERE PRO_ID =  #{PRO_ID,jdbcType=VARCHAR}
+
+
+commit;
+drop table jw_file;
+select CHK,REALFILENAME,DISPLAYFILENAME from jw_file;
+
+CREATE TABLE JW_file(chk CHAR(1) , realFileName VARCHAR(50) ,displayFileName VARCHAR(50) ,ID_file VARCHAR(30) NOT NULL PRIMARY KEY); 
+CREATE SEQUENCE JW_file_SEQ;
+
+select id,password from jw_member where id='admin' and password='admin';
+select * from tn_notice;
+
