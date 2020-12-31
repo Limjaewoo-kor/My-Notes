@@ -16,6 +16,7 @@ Comment 확인
 
 --테이블 전체 comment 조회
 SELECT  table_name, table_type, comments FROM USER_TAB_COMMENTS WHERE comments IS NOT NULL; 
+EX) SELECT  TABLE_NAME, table_type, comments FROM USER_TAB_COMMENTS WHERE comments IS NOT NULL AND TABLE_NAME='JW_COMPANY'; 
 
 --컬럼 전체 comment 조회
 SELECT table_name, column_name, comments FROM USER_COL_COMMENTS WHERE comments IS NOT NULL; 
