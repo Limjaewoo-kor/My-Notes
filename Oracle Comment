@@ -6,19 +6,19 @@ Comment 설정
 COMMENT ON TABLE [테이블명] IS [Comment];
 COMMENT ON TABLE EX_TABLE IS '예제 테이블';
 
+EX) COMMENT ON TABLE JW_COMPANY IS '메인디비';
+
 --컬럼 Comment 설정
 COMMENT ON COLUMN [테이블명].[컬럼명] IS '[Comment]';
 COMMENT ON COLUMN EX_TABLE.DEPT IS '부서';
 COMMENT ON COLUMN EX_TABLE.TP IS '유형';
 
+EX) COMMENT ON COLUMN JW_COMPANY.NAME IS '이름';
 
-EX)
-COMMENT ON TABLE JW_COMPANY IS '메인디비';
-
-COMMENT ON COLUMN JW_COMPANY.NAME IS '이름';
 
 
 Comment 확인
+
 
 --테이블 전체 comment 조회
 SELECT  table_name, table_type, comments FROM USER_TAB_COMMENTS WHERE comments IS NOT NULL; 
@@ -26,6 +26,8 @@ EX) SELECT  TABLE_NAME, table_type, comments FROM USER_TAB_COMMENTS WHERE commen
 
 --컬럼 전체 comment 조회
 SELECT table_name, column_name, comments FROM USER_COL_COMMENTS WHERE comments IS NOT NULL; 
+EX) SELECT table_name, column_name, comments FROM USER_COL_COMMENTS WHERE comments IS NOT NULL AND TABLE_NAME='JW_COMPANY'; 
+
 
 --각 테이블과 컬럼 comment 조회
 SELECT
