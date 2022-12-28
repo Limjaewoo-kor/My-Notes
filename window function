@@ -1,0 +1,81 @@
+window function
+- JavaScript 에서 최상위 객체
+- 함수를 호출할 때는 window.함수명(), 함수명() 으로 호출이 가능
+
+
+1) window.alert("메시지");
+일반적인 alert
+
+2) boolean window.confirm("메시지");
+- 일반적인 confirm / 확인을 누르면 true, 취소를 누르면 false 반환.
+
+
+3) String window.prompt("메시지", "기본값");
+- 메세지 입력가능한 창을 출력해줌. 입력받은 메시지를 반환 [input태그와 비슷]
+
+
+4) window.open("url", "팝업명", "속성들(가로, 세로, x좌표, y좌표 등)")
+- 새창으로 팝업창을 열거나 현재창을 이동하기도함. _blank / _self 
+
+
+5) window.close();
+- 현재 창을 닫음. window.open으로 새창을 열었을때 opener.close로 부모창을 닫을수도있음.
+
+
+6) setTimeout("함수명", 1000분의 1초 단위)
+- 특정 시간이 지난후에 실행, timer 객체를 반환, 중지하려면 clearTimeout(timer 객체);
+
+
+7) setInterval("함수명", 1000분의 1초 단위)
+- 특정 시간마다 반복 호출 timer 객체를 반환, 중지하려면 clearInterval(timer 객체);
+
+
+8)  escape(string) / unescape(string)
+- 한국어,일본어,중국어등 2바이트인 언어들을 UTF-8로 인코딩하거나 UTF-8 형식으로 인코딩된 값을 디코딩
+
+
+9) encodeURI(string) / decodeURI(string)
+- 인코딩 / 디코딩
+
+
+10)  encodeURIComponent(string) / decodeURIComponent(string) 
+- 알파벳과 숫자외에 대부분 문자를 인코딩 / 디코딩
+
+
+11) eval(string)
+- 매개변수에 있는 값을 JavaScript 코드로서 해석
+
+
+12) inNaN()
+- 숫자가 아니면 true, 숫자면 false 를 반환한다.
+
+
+13) parseInt("문자열")
+- 숫자로 시작하지 않으면 NaN 을 반환, 숫자로 시작하고 중간에 문자가 있으면 숫자 부분만 반환.
+
+
+14) onload
+window.onload = function() { 
+    alert('페이지 전체가 로드되었습니다.');
+};
+// window.addEventListener('load', (event) => { alert('페이지 전체가 로드되었습니다.')});  위와 같다.
+
+
+15) onbeforeunload는 화면 새로고침,닫기,뒤로등으로 화면을 떠날때 발생
+window.onbeforeunload = function() {
+  return false;
+};
+
+
+16) onunload는 화면 새로고침,닫기,뒤로등으로 화면을 떠날때 발생
+window.addEventListener("unload", function() {
+  navigator.sendBeacon("/analytics", JSON.stringify(analyticsData));
+};
+
+
+* onbeforeunload 와 onunload의 차이는 
+사용자가 페이지를 떠나려 할 때 onbeforeunload 이벤트가 뜨고 (떠나기 전 확인을 위해),
+마지막으로 떠나기 직전 onunload 이벤트 호출한 다음 페이지 내 이벤트 루프를 종료시킵니다.
+그렇기 때문에 onunload 에서 수행할 수 있는 스크립트는 한계가 있으며,
+ajax의 경우 async 옵션을 꺼야지 동작합니다.
+참고로 onbeforeunload 이벤트는 모바일에서 동작하지 않습니다. (성능 및 보안 이슈)
