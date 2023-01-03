@@ -1,0 +1,118 @@
+웹취약점의 유형.
+
+OWASP TOP 10 (국제 웹보안 표준기구로 정기적으로 웹 보안 동향을 발표하는 기관)
+
+1.XSS
+
+2.Injection Flaws
+
+3.악성 파일 실행
+
+4.불안전한 직접 객체 참조
+
+5.Cross-Site Request Forgery
+
+6.정보유출 및 부적절한 오류
+
+7.취약한 인증 및 세션 관리
+
+8.불안전한 암호화 저장
+
+9.불안전한 통신
+
+10.URL 접속 제한 실패
+
+ 
+
+국정원 8대 취약점
+
+1.디렉토링 리스팅 취약점
+
+2.파일 다운로드 취약점
+
+3.크로스 사이트 스크립트 취약점
+
+4.파일 업로드 취약점
+
+5.Web Dev 취약점
+
+6.테크노트 취약점
+
+7.SQL Injectin 취약점
+
+
+
+
+XSS란? 
+
+원래라면 Cross Site Scripting의 약자로 Cross로 시작하여 CSS가 맞지만 HTML의 css와 겹쳐서 XSS라고 정의한 해킹 기법입니다. 
+XSS 처리를 하지 않으면 간단한 방법을 통해 사이트를 조작할 수 있습니다.
+
+
+public static String xssFilter(String str) {
+	String result = "";
+	
+	result = str;
+	result = result.replaceAll("[<]", "&lt;");
+	result = result.replaceAll("[>]", "&gt;");
+	
+	return result;
+}
+
+위와 같이 "<"의 경우 "&lt;" replace를 ">"를 "&gt;" 이렇게 수정하여 XSS Filter처리를 할 수 있습니다.
+
+ 
+
+public static String xssDecoding(String str) {
+	String result = "";
+	
+	result = str;
+	result = result.replaceAll("&lt;", "[<]");
+	result = result.replaceAll("&gt;", "[>]");
+	
+	return result;
+}
+
+반대로 XSS를 Decoding하려면 replace를 반대로 해주면 됩니다.
+
+클라이언트에서 서버로 요청을 하는 경우에는 XSS Filter처리를 하고, 서버에서 처리하거나 클라이언트의 요청을 응답할 때 XSS Decoding을 사용하여 치환을 해줍니다.
+
+위의 코드는 "<", ">" 두가지만 있지만 위험한 문자열의 경우 보통 아래와 같이 XSS Filter처리를 해줍니다.   
+
+ 문자	 인코딩 된 문자
+ &	 &amp;
+ <	 &lt;
+ >	 &gt;
+ '	 &#x27;
+ "	 &quot;
+ (	&#40;
+ )	&#41;
+ /	 &#x2F;
+
+
+
+xss방어책으로 네이버의 lucy-xss-filter가 있으며, 상위버전으로 Lucy-Xss-Servlet-Filter가 있다.
+
+이 라이브러리는 기존의 lucy-xss-filter를 사용해도 여전히 아래와 같은 사유로 XSS 공격에 시달리고 있어 이에 대한 해결책으로 등장한 자바 서블릿 필터 기반의 라이브러리 입니다.
+
+필요한 곳에 XSS 방어코드 누락
+불필요한 곳에 XSS 방어코드가 적용되는 경우
+여기저기 XSS 방어코드가 혼재되어 유지보수 비용 증가
+Lucy-Xss-Servlet-Filter는 웹어플리케이션으로 들어오는 모든 요청 파라메터에 대해 기본적으로 XSS 방어 필터링을 수행하며 아래와 같은 필터링을 제외할 수 있는 효과적인 설정을 제공합니다.
+
+설정한 url 필터링 제외
+설정한 prefix로 시작하는 파라메터 필터링 제외
+설정한 파라메터 필터링 제외
+Lucy-Xss-Servlet-Filter를 적용하게 되면 아래와 같은 장단점이 있습니다.
+
+XML 설정 만으로 XSS 방어가 가능해짐
+비지니스 레이어의 코드 수정이 발생하지 않음
+개발자가 XSS 방어를 신경 쓰지 않아도 됨
+XSS 방어가 누락되지 않음
+설정 파일 하나로 XSS 방어절차가 파악됨
+파라메터명에 대해 관리가 필요해짐
+일괄 적용되어 영향 받기 때문에 정확한 필터링 룰 정의가 중요함
+
+
+
+
