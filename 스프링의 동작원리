@@ -1,0 +1,30 @@
+클라이언트의 요청을 실제로 처리하는 것은 컨트롤러이고 DispatcherServlet은 클라이언트의 요청을 전달받는 창구 역할을 한다. 
+앞서 설명했듯이 DispatcherServlet은 클라이언트의 요청을 처리 할 컨트롤러를 찾기 위해 HandlerMapping을 사용한다.
+
+컨트롤러를 찾아주는 객체의 타입은 ControllerMapping이어야 할 것 같은데 실제 타입은 HandlerMapping이다. 
+
+왜냐하면 스프링 MVC는 웹 요청을 처리할 수 있는 범용적인 프레임워크를 제공하고 있다.
+
+이런 이유로 스프링 MVC는 웹 요청을 실제로 처리하는 객체를 핸들러(Handler)라고 표현하고 있으며, @Controller 적용 객체나 Controller 인터페이스를 구현한 객체 모두 스프링 MVC입장에서는 핸들러가 된다. 
+따라서, 특정 요청 경로를 처리해주는 핸들러를 찾아주는 객체를 HandlerMapping이라고 부른다.
+
+DispatcherServlet은 핸들러 객체의 실제 타입에 상관없이, 실행 결과를 ModelAndView라는 타입으로만 받을 수 있으면 된다. 
+그런데 핸들러의 실제 구현 타입에 따라 ModelAndView를 리턴하는 객체도있고, 그렇지 않은 구현 객체도 있다.
+
+따라서, 핸들러의 처리 결과를 ModelAndView로 변환해주는 객체가 필요하며, HandlerAdapter가 바로 이변환을 수행해준다.
+
+핸들러 객체의 실제 타입마다 그에 알맞는 HandlerMapping과 HandlerAdapter가 존재하기 때문에, 사용할 핸들러의 종류에 따라 해당 HandlerMapping과 HandlerAdapter를 스프링 빈으로 등록해주어야 한다.
+
+
+
+![spring](https://user-images.githubusercontent.com/68491295/210312987-25b04f91-1a0c-43f7-b777-efdcaccef3c9.png)
+![spring2](https://user-images.githubusercontent.com/68491295/210312998-2a238e28-93ed-45d8-bb81-0902124c6400.png)
+
+
+결국 스프링의 원리를 살펴보면 requestMapping 요청이 왔을때 DispatcherServlet을 먼저 거치게되고 HandlerMapping에서 알맞은 Handler을 찾아주고 그에 알맞는 HandlerAdapter를 찾아준다.
+
+HandlerAdapter를 찾게된후에 Controller,Service,DAO -> DB 등의 서비스 로직을 거치고 결과값을 DispatcherServlet으로 되돌려주며,
+DispatcherServlet은 ViewResolver로 물리적 View의 이름을 보내게되고
+이름을 return 받은 ViewResolver는 물리적 이름에 걸맞는 실제 View파일을 찾아서 DispatcherServlet에게 return해준다. 
+
+그후에 DispatcherServlet이 ViewResolver에게 받은 실제 View 파일을 Client에게 출력해준다.
