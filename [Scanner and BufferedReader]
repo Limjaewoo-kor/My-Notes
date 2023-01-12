@@ -24,3 +24,10 @@ st.nextToken() // AB
 st.nextToken() // CDD
 st.nextToken() // EFFF
 st.nextToken() // GH
+
+
+BufferedReader를 사용할때와 Scanner의 속도가 차이가 나는 이유는 buffer 사용 여부의 차이입니다.
+
+Scanner는 1KB 크기의 버퍼를 갖기 때문에 입력이 바로 전달되는 반면,
+BufferedReader는 8KB 크기의 버퍼를 가져 buffer에 입력들을 저장하였다 한 번에 전송하기 때문에 속도가 더 빠릅니다.
+또한, Scanner는 입력을 읽는 과정에서 내부에서 정규 표현식 적용, 입력값 분할, 파싱 과정 등을 거치기 때문에 속도가 느립니다.
