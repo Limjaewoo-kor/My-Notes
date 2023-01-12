@@ -1,11 +1,3 @@
-ORACLE DB
-
-
-SELECT  PRO_NAME FROM  jw_product WHERE origin IN (SELECT  origin FROM jw_product WHERE  origin = '중국산');        /* 서브 쿼리 */
-
-select ORIGIN,COUNT(*),sum(PRO_ID) from jw_product group by origin;                                                /* group by */
-
-select b.PRO_id, b.PRO_name, b.origin, b.weight, b.com_key from jw_company a join jw_product b on (a.ID = b.com_key) and a.ID=1 ;  /* JOIN */
 
 
 JOIN할때 ON과 WHERE 중 어디에 조건을 줘야 효과적일까?
@@ -14,25 +6,12 @@ ANSI 표준에 따른 코딩에서는 조인 조건을 ON절에 달아주고, WH
 ON에 검색조건을 달아도 쿼리 실행에는 상관없으나,
 ON절에 조건을 주면, 테이블을 합칠 때 조건이 걸려서 하나의 가상테이블이 만들어집니다. 
 그와 반대로 WHERE절에 조건이 걸리면, 다 만들어진 테이블을 다시 훑으면서 해당 조건에 맞는 결과물을 반환하는 게 됩니다. 
+ON절에 거는게 더욱 효과적이라고 볼 수 있다.
 
 
 Oracle DB에서 BOOLEAN을 표현하려면??
 오라클에는 Boolean 자료형이 따로 존재하지않기때문에,
 True,False는 "1","0"을 이용하여 CHAR(1)타입으로 저장한다.
-
-
-현재 시간 저장시에는 SYSDATE사용.
-Mapping 오류시 #{파라미터, jdbcType=타입}
-ex)
-    <update id="updatejw" parameterType="java.util.Map">
-		UPDATE JW_COMPANY
-		SET
-		 NAME = #{NAME}
-		 ,KINDS = #{KINDS, jdbcType=VARCHAR}
-		 ,TEL = #{TEL, jdbcType=VARCHAR}
-		 ,CREATE_DATE = SYSDATE                         //SYSDATE 사용.
-		 WHERE ID =  #{ID,jdbcType=VARCHAR}
-    </update>
 
 
 Commit, Rollback, Savepoint
@@ -44,7 +23,7 @@ Rollback - Delete나 Update후 Commit을 안했다면 되돌릴수있음. 가장
 Savepoint - Rollback 할 수 있도록 위치를 정해놓음.
 
 
-------------------------------------------------Commit 후 복구 하는법. --------------------------------------------
+------------------------------------------------Commit 후 이전 데이터 확인 하는법. --------------------------------------------
 
 오라클은 UNDO tablespace를 가지고 있는데, Commit이 된 후 부터 일정 시간동안 임시로 테이블을 저장하고 있다. 얼마나 오래 유지 할 것인가는 Undo Table속성에서 정할 수 있다. 
 
@@ -61,7 +40,8 @@ select *
   from 테이블명 as of timestamp(systimestamp-interval '2' day);
 - 이틀 전
 
---------------------------------------------------------------조회 및 살리기 쿼리-------------
+----------------------------------------------------조회 및 살리기 쿼리----------------------------------------------------
+
 -- 실수로 지운 데이터 조회하기 (10분전 데이터 조회)
 
 SELECT * FROM employees
@@ -83,80 +63,86 @@ SELECT * FROM employees
 WHERE no = '7'
 
 
+----------------------------------------------------CLOB데이터 글자 수 조회하기----------------------------------------------------
+
+오라클에서 CLOB에 length등의 함수를 쓰면 에러가 발생한다. 
+CLOB형태의 컬럼 데이터를 길이를 구하고, 문자열을 자르려면, DBMS_LOB.GETLENGTH, DBMS_LOB.SUBSTR을 사용하면 된다.
+아래처럼 사용하면 된다. 컬럼은 CLOB형이어야한다.
+
+SELECT DBMS_LOB.SUBSTR(CLOB형 컬럼명, 자를 문자열 길이, OFFSET) AS "CLOB_SUBSTR" -- 문자열 자르기
+       DBMS_LOB.GETLENGTH(CLOB형 컬럼명)  AS "CLOB_LENGTH" , -- 문자열 
+ FROM 테이블이름
+     
+
+---------------------------------------------------- SUBQUERY 종류 ----------------------------------------------------
+
+스칼라 서브 쿼리	 SELECT 절	 	단일 칼럼, 단일 행을 반환 (1개의 값)
+
+ 인라인 뷰	 FROM 절	 	View와 사용적인 측면에서 동일함 (임시 뷰, 임시 테이블)
+
+ 중첩 서브 쿼리	 WHERE 절, HAVING 절	다중 칼럼 또는 다중 행을 반환
+
+----------------------------------------------------  ----------------------------------------------------
+
+CONNECT BY - 계층형으로 나누기 위해 사용하는 쿼리
+EX )
+SELECT EMPNO, ENAME, MGR FROM EMP
+START WITH MGR IS NULL
+CONNECT BY PRIOR EMPNO='MGR'
 
 
-----------------------------------------------------개인 참고 사항--------------------------------
-SELECT * FROM JW_company WHERE 1=1 ORDER BY ID ASC;
- DELETE FROM JW_product;
-DELETE FROM JW_company;
-delete from jw_file;
- 
- drop table JW_product;
- drop table JW_company;
- DROP SEQUENCE JW_COMPANY_SEQ;
- DROP SEQUENCE JW_PRODUCT_SEQ;
-    
-
-CREATE TABLE JW_Member(NO VARCHAR(30) NOT NULL PRIMARY KEY, ID VARCHAR(50) ,PASSWORD VARCHAR(30),CREATE_DATE DATE); 
-CREATE TABLE JW_company(ID VARCHAR(30) NOT NULL PRIMARY KEY, NAME VARCHAR(50) ,KINDS VARCHAR(30) ,TEL VARCHAR(30) ,CREATE_DATE DATE ); 
-CREATE TABLE JW_product(PRO_ID VARCHAR(30) NOT NULL PRIMARY KEY, PRO_NAME VARCHAR(50) ,ORIGIN VARCHAR(30) ,WEIGHT VARCHAR(10) , com_key VARCHAR(30) );
-ALTER TABLE JW_product ADD CONSTRAINT fk_bbs_id FOREIGN KEY(com_key) REFERENCES JW_company(ID);
-CREATE SEQUENCE JW_COMPANY_SEQ;
-CREATE SEQUENCE JW_PRODUCT_SEQ;
-CREATE SEQUENCE JW_Member_SEQ;
-
-insert into JW_company values('1','농협','1','010','2020-01-01');
-insert into JW_company values('2','농협','1','010','2020-01-01');
-insert into JW_company values('3','농협','1','010','2020-01-01');
-insert into JW_company values('4','농협','1','010','2020-01-01');
-insert into JW_product values('1','당근','국산','20kg','1');
-insert into JW_product values('2','오이','국산','20kg','1');
-insert into JW_product values('3','오이','국산','20kg','3');
-insert into JW_Member values('1','admin','admin','2020-01-01');
-
-select * from jw_company;
-select * from jw_product;
-SELECT  PRO_NAME FROM jw_product WHERE origin in (SELECT  origin FROM jw_product WHERE  origin = '중국산');        
-select ORIGIN,COUNT(*),sum(PRO_ID) from jw_product group by origin;                                               
-select b.PRO_id, b.PRO_name, b.origin, b.weight, b.com_key from jw_company a join jw_product b on (a.ID = b.com_key) and a.ID=1 ; 
-SELECT * FROM USER_SEQUENCES;
-
-select nvl(pro_id, null) from jw_product where pro_id = 6;
+PARTITION BY - 집계함수에 그룹바이와 비슷하게 붂는 역할로 사용이 가능하다.
+EX )
+SELECT empno, ename, job, sal
+     , SUM(sal) OVER(PARTITION BY job)
+  FROM emp
+ WHERE job IN ('MANAGER', 'SALESMAN')
+ ORDER BY job
 
 
+GROUP BY - 그룹바이절로 그룹을 지을 수 있으며, ROLLUP, CUBE, GROUPPING SETS를 사용할 수 있다.
+EX )
 
-		UPDATE JW_COMPANY
-		SET
-		 NAME = '호호'
-		 ,KINDS = '01'
-		 ,TEL = '010'
-		 WHERE ID = 6;
-         
-         UPDATE JW_PRODUCT
-		SET
-    
-        PRO_NAME = '당근3'
-		 ,ORIGIN = '국산'
-		 ,WEIGHT = '20kg'
-         ,COM_KEY = '1'
-		 WHERE PRO_ID = 1;
+1) ROLLUP - 사용시 인자로 넣은 값을 기준으로 소계,총계가 함께 조회된다.
+EX )
+SELECT 상품ID, 월, SUM(매출액) AS 매출액
+FROM 월별매출
+GROUP BY ROLLUP(상품ID, 월);
 
+	ROLLUP함수를 쓰면
+	첫번째 인자(상품 ID)별 두번째 인자(월) + 첫번째 인자(상품 ID)별 두번째 인자(월)의 소계(SUBTOTAL) + 총계(GRAND TOTAL) 의 결과가 나온다.
+	따라서 ROLLUP함수는 인수의 순서에도 영향을 받게 된다.
 
-UPDATE JW_COMPANY
-		SET
-		 NAME = '농협'
-		 ,KINDS = 1
-		 ,TEL = 010
-		 WHERE PRO_ID =  #{PRO_ID,jdbcType=VARCHAR}
+EX )
+SELECT 월, 상품ID, SUM(매출액) AS 매출액
+FROM 월별매출
+GROUP BY ROLLUP(월, 상품ID);
+
+	아까와는 반대로
+	첫번째 인자(월)별 두번째 인자(상품 ID) + 첫번째 인자(월)별 두번째 인자(상품ID)의 소계(SUBTOTAL) + 총계(GRAND TOTAL) 의 결과가 나온다.
 
 
-commit;
-drop table jw_file;
-select CHK,REALFILENAME,DISPLAYFILENAME from jw_file;
+2) CUBE - 
+EX )
+SELECT 상품ID, 월, SUM(매출액) AS 매출액
+FROM 월별매출
+GROUP BY CUBE(상품ID, 월);
 
-CREATE TABLE JW_file(chk CHAR(1) , realFileName VARCHAR(50) ,displayFileName VARCHAR(50) ,ID_file VARCHAR(30) NOT NULL PRIMARY KEY); 
-CREATE SEQUENCE JW_file_SEQ;
+	ROLLUP과 같이 소계와 총계가 조회되나, 모든 경우의 수에 대하여 조회된다. 따라서 인자값이 달라도 영향이없다.
 
-select id,password from jw_member where id='admin' and password='admin';
-select * from tn_notice;
 
+3) GROUPING SETS  -
+EX )
+SELECT 상품ID, 월, SUM(매출액) AS 매출액
+FROM 월별매출
+GROUP BY GROUPING SETS(상품ID, 월);
+
+	첫번째 인자(상품ID)별 소계(SUBTOTAL), 두번째 인자(월)별 소계(SUBTOTAL)이 나오는 것을 확인할 수 있다.
+	ROLLUP과 CUBE와 달리 계층 구조가 나타나지 않으며 따라서 인자의 순서가 달라도 결과는 똑같다.
+	또한, GROUPING SETS 함수는 괄호로 묶은 집합별로도 집계를 구할 수 있다.
+EX )
+SELECT 상품ID, 월, 회사, SUM(매출액) AS 매출액
+FROM 월별매출
+GROUP BY GROUPING SETS((상품ID, 월), 회사);
+	
+	묶여진 컬럼을 하나의 인자로 취급해 (상품ID, 월)별 소계(SUBTOTAL)과 회사별 소계(SUBTOTAL)이 나오는 걸 확인할 수 있다.
