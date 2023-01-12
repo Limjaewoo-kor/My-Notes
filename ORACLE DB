@@ -146,3 +146,38 @@ FROM 월별매출
 GROUP BY GROUPING SETS((상품ID, 월), 회사);
 	
 	묶여진 컬럼을 하나의 인자로 취급해 (상품ID, 월)별 소계(SUBTOTAL)과 회사별 소계(SUBTOTAL)이 나오는 걸 확인할 수 있다.
+	
+	
+	
+	
+===========================================  TO_NUMBER() 안먹힐때 =============================
+컬럼이 숫자로만 이루어져 있는지 확인법.
+
+SELECT CASE WHEN TRANSLATE('-1234.56','A1234567890.+-','A') IS NULL THEN
+                 TO_NUMBER('-1234.56')
+       END
+  FROM dual
+
+	TRANSLATE 함수를 사용하여 숫자 체크 (오라클 8i 이상)
+
+SELECT CASE WHEN REGEXP_INSTR('-1234.56','^[+-]?\d*(\.?\d*)$') = 1 THEN
+                 TO_NUMBER('-1234.56')
+       END
+  FROM dual
+ 
+	REGEXP_INSTR 함수를 사용하여 숫자 체크 (오라클 10g 이상)
+
+
+SELECT CASE WHEN VALIDATE_CONVERSION('-1234.56' AS NUMBER) = 1 THEN
+                 TO_NUMBER('-1234.56')
+       END
+  FROM dual
+ 
+	VALIDATE_CONVERSION 함수를 사용하여 숫자 체크 (오라클 12c R2 이상)
+
+	오라클 12c부터 정식 형 변환 체크 함수가 생겼다.
+
+SELECT TO_NUMBER('123456' DEFAULT -1 ON CONVERSION ERROR)          AS result1
+     , TO_NUMBER('$123456' DEFAULT -1 ON CONVERSION ERROR)         AS result2
+     , CAST('123456' AS NUMBER(10) DEFAULT -1 ON CONVERSION ERROR) AS result3
+  FROM dual
