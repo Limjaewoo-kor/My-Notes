@@ -181,3 +181,47 @@ SELECT TO_NUMBER('123456' DEFAULT -1 ON CONVERSION ERROR)          AS result1
      , TO_NUMBER('$123456' DEFAULT -1 ON CONVERSION ERROR)         AS result2
      , CAST('123456' AS NUMBER(10) DEFAULT -1 ON CONVERSION ERROR) AS result3
   FROM dual
+
+===================================================================================================================
+
+1. 테이블 복사하기 스키마 & 데이터
+
+CREATE TABLE 새로만들테이블명 AS
+
+SELECT * FROM 복사할테이블명 [WHERE 절]
+
+ 
+
+2. 테이블 구조만 복사하기
+
+CREATE TABLE 새로만들테이블명 AS
+
+SELECT * FROM 복사할테이블명 WHERE 1=2 [where절에 '참'이 아닌 조건을 넣어줌]
+
+ 
+
+3. 테이블은 이미 생성되어 있고 데이터만 복사 (테이블 구조가 동일할 때)
+
+INSERT INTO 복사할테이블명 SELECT * FROM 테이블명 [WHERE 절]
+
+--Sample SQL
+INSERT INTO TB_BOARD_TEMP SELECT * FROM TB_BOARD;
+ 
+
+4. 테이블은 이미 생성되어 있고 데이터만 복사 (테이블 구조가 다를 때)
+
+INSERT INTO 복사할테이블명 (NUM, TITLE, CONTENTS) SELECT NUM, TITLE, CONTENTS FROM 테이블명
+
+--Sample SQL
+INSERT INTO TB_BOARD_TEMP (NUM, TITLE, CONTENTS) SELECT NUM, TITLE, CONTENTS FROM TB_BOARD;
+
+
+================================================ 구분자 '|'로 데이터 로우 늘리기 ===============================================================
+
+ SELECT SUBSTR(a.langList, 
+            INSTR(a.langList, '|', 1, LEVEL) + 1,
+            INSTR(a.langList, '|', 1, LEVEL + 1) - INSTR(a.langList, '|', 1, LEVEL)-1
+        ) AS split_result
+   FROM (SELECT '|' || 'Java|Kotlin|Python|Swift' || '|' AS langList 
+           FROM dual) a
+CONNECT BY LEVEL <= LENGTH(a.langList) - LENGTH(REPLACE(a.langList, '|')) - 1
