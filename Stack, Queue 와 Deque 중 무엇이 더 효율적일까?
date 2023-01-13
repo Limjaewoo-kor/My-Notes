@@ -1,0 +1,31 @@
+Stack, Queue 와 Deque 중 무엇이 더 효율적일까? 
+
+https://docs.oracle.com/javase/8/docs/api/ 자바 공식문서를 확인해보면 아래와 같은 말이 있습니다.
+
+
+Resizable-array implementation of the Deque interface. Array deques have no capacity restrictions; they grow as necessary to support usage. 
+They are not thread-safe; in the absence of external synchronization, they do not support concurrent access by multiple threads. Null elements are prohibited. 
+This class is likely to be faster than Stack when used as a stack, and faster than LinkedList when used as a queue.
+Most ArrayDeque operations run in amortized constant time. Exceptions include remove, removeFirstOccurrence, removeLastOccurrence, contains, iterator.remove(), and the bulk operations, all of which run in linear time.
+
+Deque 인터페이스의 크기 조정 가능한 배열 구현입니다. 어레이 deque에는 용량 제한이 없습니다. 사용을 지원하기 위해 필요에 따라 커집니다. 
+스레드로부터 안전하지 않습니다. 외부 동기화가 없으면 여러 스레드의 동시 액세스를 지원하지 않습니다. Null 요소는 금지됩니다. 
+이 클래스는 스택으로 사용하면 Stack보다 빠르고 Queue로 사용하면 LinkedList보다 빠를 가능성이 높습니다.
+대부분의 ArrayDeque 작업은 일정 상각 시간에 실행됩니다. 예외에는 remove, removeFirstOccurrence, removeLastOccurrence, contains, iterator.remove() 및 대량 작업이 포함되며 모두 선형 시간으로 실행됩니다.
+
+
+주목해야할 부분은 세번째줄에 "스택으로 사용하면 Stack보다 빠르고 Queue로 사용하면 LinkedList보다 빠를 가능성이 높습니다." 이 부분인데 그 이유는 2가지이며 다음과 같습니다.
+
+출처 : http://javaqueue2010.blogspot.com/
+
+ 
+<수행속도>
+ArrayDeque는 Array에 의해 지원되며 Array는 LinkedList보다  cache-locality에 좀 더 친숙하다고 합니다.
+(LinkedList는 다음 노드가 있는 곳으로 가려고 다른 간접적인 경로를 거쳐갑니다.)
+
+
+<메모리>
+ArrayDeque는 다음 노드에 대한 추가 참조를 유지할 필요가 없으므로 LinkedList보다 메모리 효율적입니다.
+
+1. ArrayDeque는 Array에 의해 지원되며 Array는 LinkedList보다 캐시 지역에 더 친숙합니다(다음 노드가 있는 위치를 찾기 위해 다른 간접 참조를 거쳐야 하기 때문).
+2. ArrayDeque는 다음 노드에 대한 추가 참조를 유지할 필요가 없기 때문에 LinkedList보다 메모리 효율적입니다.
