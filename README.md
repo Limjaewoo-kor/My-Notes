@@ -1,5 +1,5 @@
 # Memo
 
-- 이론 자료 메모 공간
+[![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FLimjaewoo-kor%2Fhit-counter&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com)
 
-![화면 캡처 2022-12-09 163259](https://user-images.githubusercontent.com/68491295/210314347-4dfbf66f-80cb-467f-ac99-2409d644126e.png)
+
