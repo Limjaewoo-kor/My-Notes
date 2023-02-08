@@ -1,0 +1,7 @@
+@Scheduled(fixedDelay = 1000)
+
+ 스케줄 어노테이션 선언시 위와같이 fixedDelay 또는 FixedRate 옵션을 사용할 수 있다.
+ 
+ 둘의 차이점은 fixedDelay는 해당 작업이 끝난 시점부터 시간을 세고, fixedRate는 해당 작업의 시작 시점부터 시간을 셉니다.
+ 
+ 그렇기에 fixedRate일 경우에 작업의 수행시간이 길어진다면, 주기적인 실행을 보장하지 못합니다.
