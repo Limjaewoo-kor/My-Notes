@@ -1,0 +1,31 @@
+오라클 에러 
+
+ORA-04031 에러는 Shared Pool 내에 메모리가 단편화됨에 따라 연속된 parsing 공간을 제공하지 못해 발생하는 에러이다.
+
+shared pool 사이즈 조회는 
+select * from v$sga_dynamic_components 에서 가능하다.
+
+- 원인
+
+1. Shared Pool Fragmentation (Shared Pool 과도한 조각화)
+- 과도한 조각화를 방지하기 위해서는 Literal SQL > Bind Variable SQL로 바꿔주는 작업이 가장 좋은 방법입니다.
+ 하드코딩으로 박힌 SQL은 각각 마다 Shared Pool을 잡아 먹습니다. 하지만 Bind Variable SQL은 한 번 Shared Pool에 올라가서 Bind만 되는 것이기 때문에 하나의 Shared Pool만 잡아먹기 때문에 Bind Variable SQL로 대부분 바꿔주는 것이 좋습니다.
+
+
+2. Too many pinned packages (고정된 패키지가 많음)
+dbms_shared_pool.keep을 통해 크기가 큰 sql은 패키지를 해두어 빠르게 사용할 수 있도록 해둡니다.
+하지만 너무 많은 keep이 일어나게 되면 새 작업을 위한 shared pool 부족 현상으로 ORA-04031의 에러가 발생할 수 있습니다. keep 해둔 것에 대한 unkeep을 통해 조절해야 될 것입니다.
+ 
+또한 이 외에 예방 방법으로는
+shared_pool_size , shared_pool_reserved_size에 RAM을 추가하거나, 11g 이상에서는 memory_max_size를 늘려주는 방법이 있습니다.
+
+
+- 조치 방법은 2가지가 있으며, 
+
+1. flush - 조각모음 개념
+	- alter system flush shared_pool 명령어를 통해 shared pool 의 단편화를 다시 flush 해줄수는 있다.
+
+
+2. Shared Pool 사이즈를 늘리는 방법이 있다.
+	-  alter system set shared_pool_size = 200M scope=both;
+
