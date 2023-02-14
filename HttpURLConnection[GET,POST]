@@ -1,0 +1,118 @@
+HttpURLConnection 을 사용할때 GET 방식과 POST방식이 있으며, URL파라미터로 GET 방식에 파라미터를 넘길 수 있다.
+하지만, 약 6천개의 SEQ를 넘겨야하는 상황이 있었고, POST방식으로 아래와 같이 넘겨서 해결하였다.
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.Charset;
+import java.util.Map;
+
+import org.json.simple.JSONObject;
+
+public class HttpConnectionUtils {
+	
+	/** HttpURLConnection GET 방식 */
+	public static String getRequest(String targetUrl) {
+		
+		String response = "";
+		
+		try {
+			
+			URL url = new URL(targetUrl);
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			conn.setRequestMethod("GET"); // 전송 방식
+			conn.setDoOutput(true);
+      conn.setDoInput(true);
+
+			Charset charset = Charset.forName("UTF-8");
+			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), charset));
+			
+			String inputLine;			
+      
+			StringBuffer sb = new StringBuffer();
+			while ((inputLine = br.readLine()) != null) {
+				sb.append(inputLine);
+			}
+			br.close();
+			
+			response = sb.toString();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return response;
+	}
+	
+  
+  
+	/** HttpURLConnection POST 방식 */
+	public static String postRequest(String targetUrl, Map<String, Object> requestMap) {
+
+		String response = "";
+    StringBuilder result = new StringBuilder();
+    String Param = Query돌려서 나온값.
+		try {
+
+			URL url = new URL(targetUrl);
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			conn.setRequestMethod("POST"); // 전송 방식
+			conn.setDoOutput(true);	// URL 연결을 출력용으로 사용(true)
+      conn.setDoInput(true);
+			
+			
+			
+			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
+      
+      result.append(URLEncoder.encode("Param", "UTF-8"));
+      result.append("=");
+      result.append(URLEncoder.encode(Param, "UTF-8"));
+			
+      bw.write(result);
+			bw.flush();
+			bw.close();
+
+
+			Charset charset = Charset.forName("UTF-8");
+			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), charset));
+			
+			String inputLine;			
+			StringBuffer sb = new StringBuffer();
+			while ((inputLine = br.readLine()) != null) {
+				sb.append(inputLine);
+			}
+			br.close();
+			
+			response = sb.toString();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return response;
+	}
+	
+	private String getQuery(List<NameValuePair> params) throws UnsupportedEncodingException
+{
+    StringBuilder result = new StringBuilder();
+    boolean first = true;
+
+    for (NameValuePair pair : params)
+    {
+        if (first)
+            first = false;
+        else
+            result.append("&");
+
+        result.append(URLEncoder.encode(pair.getName(), "UTF-8"));
+        result.append("=");
+        result.append(URLEncoder.encode(pair.getValue(), "UTF-8"));
+    }
+
+    return result.toString();
+}
+
+}
