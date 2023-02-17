@@ -1,0 +1,153 @@
+* 락걸린 테이블 확인
+
+SELECT  DO.OBJECT_NAME, DO.OWNER, DO.OBJECT_TYPE, DO.OWNER, VO.XIDUSN, VO.SESSION_ID, VO.LOCKED_MODE
+ FROM  V$LOCKED_OBJECT VO, DBA_OBJECTS DO
+WHERE  VO.OBJECT_ID = DO.OBJECT_ID
+
+
+* 해당 테이블에 LOCK 이 걸렸는지 확인
+
+SELECT A.SID, A.SERIAL#, B.TYPE, C.OBJECT_NAME
+FROM V$SESSION A, V$LOCK B, DBA_OBJECTS C
+WHERE A.SID = B.SID AND B.ID1 = C.OBJECT_ID
+AND B.TYPE='TM' AND C.OBJECT_NAME IN ('T_SKUMA')
+
+
+* 락발생 사용자와 SQL, OBJECT 조회
+
+SELECT DISTINCT X.SESSION_ID, A.SERIAL#, D.OBJECT_NAME, A.MACHINE, A.TERMINAL,
+                A.PROGRAM, B.ADDRESS, B.PIECE, B.SQL_TEXT
+FROM V$LOCKED_OBJECT X, V$SESSION A, V$SQLTEXT B, DBA_OBJECTS D
+WHERE X.SESSION_ID = A.SID AND 
+X.OBJECT_ID = D.OBJECT_ID AND A.SQL_ADDRESS = B.ADDRESS 
+ORDER BY B.ADDRESS, B.PIECE
+
+
+* 현재 접속자의 SQL 분석
+
+SELECT DISTINCT A.SID, A.SERIAL#,
+       A.MACHINE, A.TERMINAL, A.PROGRAM,
+       B.ADDRESS, B.PIECE, B.SQL_TEXT
+FROM  V$SESSION A, V$SQLTEXT B
+WHERE A.SQL_ADDRESS = B.ADDRESS
+ORDER BY A.SID, A.SERIAL#, B.ADDRESS, B.PIECE
+
+
+* 락 세션 죽이기
+
+SELECT A.SID,   A.SERIAL#
+FROM V$SESSION A,  V$LOCK B, DBA_OBJECTS C
+WHERE A.SID = B.SID
+AND B.ID1 = C.OBJECT_ID
+AND B.TYPE = 'TM'
+AND C.OBJECT_NAME = 'TB_CO_GENO'
+
+
+SID SERIAL#
+--- -------
+5   1
+6   1
+
+
+결과값이 위와 같은 경우, 아래와 같이 kill한다.
+
+SQL> alter system kill session '5, 1';
+SQL> alter system kill session '6, 1';
+
+
+* 락 세션 죽이는 sql 문
+
+SELECT DISTINCT X.SESSION_ID, A.SERIAL#, D.OBJECT_NAME, A.MACHINE, A.TERMINAL,
+       A.PROGRAM, A.LOGON_TIME, 'ALTER SYSTEM KILL SESSION'''||A.SID||', '||A.SERIAL#||''';'
+FROM GV$LOCKED_OBJECT X, GV$SESSION A, DBA_OBJECTS D
+WHERE  X.SESSION_ID = A.SID AND X.OBJECT_ID = D.OBJECT_ID
+ORDER BY LOGON_TIME
+
+
+-----------------------------------------------------------------------------------------------------------------------------
+
+FOR UPDATE 문
+  - 9i부터 사용 가능
+  - SELECT 문으로 사용자가 임의로 lock를 걸 수 있는 명령어
+
+
+
+형식
+
+1. FOR UPDATE with no option
+
+   - lock를 획득하기 까지 무한정 기다림
+
+   - ex) select * from detp
+           where dept_no = '1111'
+           for update;
+
+   - 이렇게 하면 동일 세션에서 transaction을 해제(commit등) 을 하기 전까지는 결과셋에 대해서 lock이 걸립니다.
+
+
+ 
+
+2. FOR UPDATE NOWAIT(= WAIT 0)
+
+   - lock를 회득하지 못하면 바로 exception 처리 됩니다.
+
+   - select * from detp
+      where dept_no ='1111'
+      for update nowait;
+
+   - 결과 적으로 다른 세션에서 dept_no='1111'에 대해서 lock을 잡고 있다면 에러가 발생하죠.
+
+
+3. FOR UPDATE WAIT integer (0 ~ 4294967295, second)
+   - 1번과 유사한데 무한정 기다리는 것이 아니고 정해진 시간까지만 기다렸다가 에러를 발생합니다
+
+   - select * from detp
+      where dept_no ='1111'
+      for update wait 10; -- 10초가 기다렸다가 lock을 획득하지 못하면 에러 발생 
+
+ 
+
+4. FOR UPDATE OF
+
+   - for update문은 복수개의 table join 결과 셋에 대한 모든 테이블에 대해서 lock를 획들하게 되지만 for update of는 결과 셋 중에서 
+    특정 컬럼을 포함한 테이블에 대한 lock을 획득하세 됩니다.
+
+   - ex) select * from dept, emp
+            where emp.dept_no = dept.dept_no
+            and emp.dept_no='1111'
+            for update of emp.dept_no;
+
+ 
+
+5. FOR UPDATE SKIP LOCKED
+
+  - lock이 걸려 있는 레코드를 제외한 나머지 레코드에 lock을 획득
+
+  - ex) - 세션1
+
+          SELECT * FROM EMP
+          WHERE EMP_NO = '7934'
+           FOR UPDATE NOWAIT;
+
+         
+          - 세션2
+
+          SELECT * FROM EMP
+           WHERE DEPT_NO = 10
+           FOR UPDATE WAIT 5;  <-- 7934 직원을 포함한 부서의 lock 적용
+
+        
+           ERROR at line 1;
+           ORA-00054: resource busy and acquire with NOWAIT specified
+           이미 lock이 명시적으로 설정된 레코드를 포함한 레코드에 명시적으로 lock을 설정하려고 하면 에러 발생
+
+        
+ SELECT * FROM EMP
+ WHERE DEPT_NO = 10
+ FOR UPDATE SKIP LOCKED;
+
+ 
+
+에러가 발생하지 않고 7934 직원을 제외한 부서번호 10을 가진 사용자에 lock 획득          
+
+
