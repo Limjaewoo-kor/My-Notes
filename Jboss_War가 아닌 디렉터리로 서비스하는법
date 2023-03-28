@@ -1,0 +1,25 @@
+ war가 아닌 디렉터리로 만들어서 서비스 하려면, 
+ 
+ 1. JBoss EAP 설정파일(standalone.xml 또는 standalone-ha.xml)의 deploymount에 등록된 경로 및 디렉터리명을 확인한다.
+ <deployments>
+    <deployment name="test.war" runtime-name="test.war">
+        <fs-exploded path="/CLOUD/WebApp/deploy/test.war"/>
+    </deployment>
+</deployments>
+
+
+2. /CLOUD/WebApp/deploy/test.war 디렉터리를 만듭니다.
+# mkdir -p /WebApp/deploy/test.war
+
+
+3. 서비스 할 war 파일을 생성한 디렉터리에 압축을 해제합니다.
+# jar xvf test.war -C /WebApp/deploy/test.war/
+
+
+4. test.war 디렉터리에 WEB-INF 디렉터리가 있는지 확인합니다.
+# ls -al /WebApp/deploy/test.war/WEB-INF
+
+
+5. JBoss EAP 서비스를 재실행 합니다.
+# ./jboss_stop.sh
+# ./jboss_start.sh
