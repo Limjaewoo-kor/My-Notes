@@ -1,0 +1,22 @@
+금일 SQL 문제를 풀던중 그룹별 최대값 조회를 해야하는 문제를 조우했다.
+
+평소에 회사 업무중에는 사용하던 기본 쿼리만 사용하다보니 PARTITION BY의 사용법이 바로 떠오르지않았고,
+과거에 SQLD자격증도 취득하고 한 상황이라, SQL쪽에 공부를 소홀하게 하기도하였다.
+이번 실수로 인해 SQL도 더욱 열심히 하도록 하겠다.
+
+SELECT
+    svc_mm, 
+    track_id, 
+    sett_idx, 
+    ratio
+FROM
+    (SELECT
+        svc_mm, 
+        track_id, 
+        sett_idx, 
+        ratio,
+        ROW_NUMBER() OVER(PARTITION BY svc_mm, track_id ORDER BY sett_idx DESC) as row_idx
+    FROM
+        tmp_test)
+WHERE
+    row_idx = 1;
