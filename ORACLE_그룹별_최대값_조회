@@ -20,3 +20,20 @@ FROM
         tmp_test)
 WHERE
     row_idx = 1;
+
+
+=================================================
+
+SELECT A.NAME FROM 
+(SELECT NAME, COUNT(NAME) AS COUNT
+ FROM CITY 
+WHERE LIKES ='Y'
+GROUP BY NAME) A
+LEFT OUTER JOIN
+(SELECT NAME, COUNT(NAME) AS BCOUNT
+ FROM CITY 
+WHERE LIKES ='N'
+GROUP BY NAME) B
+ ON A.NAME = B.NAME
+WHERE A.COUNT - NVL(BCOUNT,0) > 0
+
