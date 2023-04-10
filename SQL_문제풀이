@@ -21,7 +21,7 @@ where 절에 LIKES = 'Y' AND MAXLIKE =1인것을 뽑아내는 아래와 같은 �
 위의 테이블의 데이터라 가정하였을때 금정은 Y,N이 각각 1개씩 들어있으나, 아래와 같은 쿼리를 사용시에는 이 부분은 간과하게되어버렸다.
 해당 부분을 생각하다가 시간이 초과되어 어쩔수 없이 진행중이던 상태로 제출하였으나, 종료 후 생각을 다시 되뇌어 풀어보도록 하였다.
 
-SELECT NAME,LIKES,MAXLIKE   FROM (
+SELECT NAME FROM (
 SELECT 
 NAME , LIKES,
 ROW_NUMBER() OVER(PARTITION BY NAME ORDER BY COUNT DESC) as MAXLIKE
