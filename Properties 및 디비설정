@@ -1,0 +1,20 @@
+프로젝트 설정시 데이터베이스 url 등의 정보들을 application.properties에 작성하게되는데,
+
+개발용 운영용을 따로 작성하여도 되지만,
+
+
+  url=local.db.com
+  username=local_user
+  password=local_pw
+  #---
+  spring.config.activate.on-profile=dev
+  url=dev.db.com
+  username=dev_user
+  password=dev_pw
+  #---
+  spring.config.activate.on-profile=prod
+  url=prod.db.com
+  username=prod_user
+  password=prod_pw
+  
+  위와 같이 작성하면 #--- 기준으로 다른 파일로 인식하게되며, profile이 작성되지않은 맨위의 내용이 디폴트 값이고, 프로필 입력시 아래값으로 대체 된다.
