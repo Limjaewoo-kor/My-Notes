@@ -1,0 +1,9 @@
+JPA에서 application.yml의 
+jpa:
+    hibernate:
+      ddl-auto: create 해당 부분의 create를 update나 validate로 수정시 start_value error가 나는 경우가 있다.
+
+H2 데이터베이스 버전에 대한 오류인데, 버전 교체없이 
+jpa:
+    hibernate.hbm2ddl.auto: validate
+위와 같이 변경하여 해결할 수 있다.
