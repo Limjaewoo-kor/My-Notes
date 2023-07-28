@@ -81,3 +81,26 @@ struct Kakao {
 https://www.youtube.com/watch?v=35y5VWMIJlk
 
 
+
+
+Vstack - 세로
+Hstack - 가로
+Zstack - 화면앞뒤
+LazyStack - 지연로딩
+Spacer() - 끝과 끝으로 배치
+ScrollView - 스크로 가능한 뷰로 만들기
+Vstack 보다 Form을 쓰면 자동으로 스크롤 및 좌우 정렬을 해준다.
+.padding()를 사용해도 괜찮다.
+
+
+
+변수 생성 - @State
+전달 받은 변수 -@Binding
+객체 생성 - @StateObject
+전달 받은 객체 - @ObservedObject
+
+
+
+
+
+
