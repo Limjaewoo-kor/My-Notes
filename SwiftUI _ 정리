@@ -111,3 +111,12 @@ Stepper는 숫자를 +-버튼을 이용하여 오르고 내릴수 있다.
 DatePicker는 날짜를 선택할 수 있고, Color Picker을 이용하여 컬러 선택도 할 수 있다.
 
 
+프로토콜
+
+@State - 변수의 값 변경시 자동으로 뷰 새로고침
+@Binding - 값을 바인딩 받을때 선언한다.
+@ObservableObject  - class에 선언가능하며, 다른뷰에서 감시할 수 있다.
+@ObservedObject - view에서 class를 생성할때 선언하며 뷰에서 감시할 수 있다. [위와 연계됨]
+@Published - class내에 변수에 선언가능하며, 뷰에서 감시할 수 있다. [위와 연계됨]
+
+
