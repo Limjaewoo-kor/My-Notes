@@ -1,0 +1,3 @@
+application.properties에 logging.level.org.spache.coyote.http11=debug 라고 선언하면 자세한 리퀘스트 정보를 알 수 있다.
+
+공부용이나 dev용으로는 적합하나 물론 운영서버에는 적용하지 않는 것이좋다. 성능저하가 발생할 수 있기때문이다. 
