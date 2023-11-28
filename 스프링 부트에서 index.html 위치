@@ -1,0 +1,9 @@
+Spring FrameWork에서 index.html 위치는
+
+ 
+
+resources / static / index.html 이렇게 들어가면 된다. 
+
+그외에 html 파일들은 templates 폴더 밑에 넣도록 하자
+
+ 
