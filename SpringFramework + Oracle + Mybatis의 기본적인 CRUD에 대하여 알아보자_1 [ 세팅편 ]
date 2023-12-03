@@ -1,0 +1,95 @@
+SpringFramework + Oracle + Mybatis의 기본적인 CRUD에 대하여 알아보자_1 [ 세팅편 ]
+
+-링크 - https://lcoding.tistory.com/83
+
+1. build.gradle 과 application.properties에 아래와 같이 Mybatis 세팅을 해준다. 
+
+- build.gradle
+
+plugins {
+id 'org.springframework.boot' version '2.6.5'
+id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+id 'java'
+}
+group = 'com.prepot'
+version = '0.0.1-SNAPSHOT'
+
+java {
+sourceCompatibility = '17'
+}
+
+repositories {
+mavenCentral()
+}
+
+dependencies {
+implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+implementation 'org.springframework.boot:spring-boot-starter-web'
+
+//MyBatis 추가
+implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.0'
+runtimeOnly 'com.oracle.database.jdbc:ojdbc11'
+
+compileOnly 'org.projectlombok:lombok'
+annotationProcessor 'org.projectlombok:lombok'
+testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+//테스트에서 lombok 사용
+testCompileOnly 'org.projectlombok:lombok'
+testAnnotationProcessor 'org.projectlombok:lombok'
+}
+
+tasks.named('test') {
+useJUnitPlatform()
+}
+ 
+
+-  application.properties
+
+spring.profiles.active=local
+
+#Oracle DataSource
+spring.datasource.driver-class-name=oracle.jdbc.driver.OracleDriver
+spring.datasource.url=jdbc:oracle:thin:@localhost:1521/xe
+spring.datasource.username=jae
+spring.datasource.password=1234
+
+
+#MyBatis
+mybatis.type-aliases-package=com.prepot.domain
+mybatis.configuration.map-underscore-to-camel-case=true
+logging.level.hello.itemservice.repository.mybatis=trace
+mybatis.mapper-locations=classpath:mappers/*.xml
+
+ 
+
+2. 프로젝트내에 구조를 아래와 같이 세팅합니다.
+
+- config 디렉토리내에 MyBatisConfig 파일은 빈 주입 역할이며 스프링부트의 메인메서드 부분에서 improt 할 것이다.
+
+- domain 디렉토리는 Vo 역할이다.
+
+- repository 디렉토리는 리포지토리 인터페이스와 @Repository가 달리는 구현체, 그리고 Mapper.xml과 연결되는 mapper    인터페이스가 존재하며, Update 및 검색기능에 사용할 dto들이 존재한다.
+
+- service 디렉토리는 Service 인터페이스와 @Service가 달리는 구현체인 Impl 파일이 존재한다.
+
+- web 디렉토리는 @Controller이 붙는 컨트롤러 파일들이 존재한다.
+
+- resources - mappers 디렉토리에는 repository-mybatis디렉토리내에 있던 mapper 인터페이스 파일과 같은 이름의
+
+   쿼리가 있는 xml파일이 존재한다.
+
+- resources - static 디렉토리에는 정적인 html들, 현재 프로젝트에서는 index.html이 존재한다.
+
+- resources - templates 디렉토리에는 동적인 html들이 존재한다.
+
+
+3.
+
+동작 순서는 html - controller - service - serviceImpl - repository -  mybatisRepository - mapper - mapper.xml로 동작하며 역순으로 나옵니다.
+
+*** [ 물론 세부적으로는 디스페처서블릿부터 인터셉터나 필터, 여러 리졸버들이 존재하지만 프로젝트내에 존재하는 파일 기준으로 간단하게 표현한 내용입니다. ] ***
+
+ 
+
+위에서 설명한 파일들의 세부코드에 대해서는 2편에서 이어서 알아보겠습니다.
