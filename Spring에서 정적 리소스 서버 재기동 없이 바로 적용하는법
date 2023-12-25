@@ -1,0 +1,55 @@
+Spring에서 정적 리소스 서버 재기동 없이 바로 적용하는법
+
+그림을 포함한 상세 설명 링크 -> https://lcoding.tistory.com/97
+
+Intellij / Gradle / SpringFrameWork 에서 View 리소스 서버 재기동 없이 바로 적용하는법에 대하여 알아보겠습니다.
+
+
+1. build.gradle 파일의 dependencies 안에 아래 내용을 추가해준다.
+
+dependencies {
+
+중략...
+
+//html 서버 재기동 없이 적용
+developmentOnly 'org.springframework.boot:spring-boot-devtools'
+}
+ 
+
+2. application.properties 파일에 아래 내용을 추가해준다.
+
+#서버 재기동없이 HTML 적용
+spring.devtools.livereload.enabled=true
+spring.devtools.restart.enabled=false
+spring.thymeleaf.cache=false
+ 
+
+3. 프로젝트를 실행하는 부분에서 아래화살표를 클릭한 후 Edit Configurations...을 눌러줍니다.
+
+
+
+4. 빨강색 숫자 1,2,3,4순서대로 눌러줍니다.
+
+Modify options - On 'update' action - Update classes and resources 선택후 숫자 4번과 같이 포함되어있는지 확인합니다.
+
+ 
+
+5. 빨강색 숫자 1,2,3,4,5순서대로 눌러줍니다.
+
+Modify options - On frame deactivation - Update classes and resources 선택후 숫자 4번과 같이 포함되어있는지 확인하고, 숫자 5번의 'OK'버튼이나 그옆의 'Apply' 버튼을 눌러줍니다.
+
+
+6. 그후에는 인텔리제이의 Settings부분에서 추가로 설정해주어야 할 부분이 있습니다.
+
+Window 기준으로 Ctrl+Alt+S 를 눌러서 Settings를 켜주고
+
+Build, Execution, Deployment - Compiler - Build project automatically를 체크 해주고 'Apply' 해줍니다.
+
+ 
+
+7. Advanced Settings탭으로 이동하여 Allow auto-make to start even if developed application is currently running을 체크하고 'Apply' 해줍니다.
+ 
+
+이렇게 하면 정적 리소스 부분이 서버 재기동 없이 바로 바로 반영됩니다.
+
+감사합니다.
