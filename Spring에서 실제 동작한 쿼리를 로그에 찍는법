@@ -1,0 +1,50 @@
+Spring에서 실제 동작한 쿼리를 로그에 찍는법
+
+- 이미지를 포함한 설명 링크 ->   https://lcoding.tistory.com/98
+ 
+
+1. build.gradle의 dependencies 안에 아래와 같이 작성해주고 리로드를 한다.
+
+[ implementation 'org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4:1.16' ]
+
+
+ 
+
+2. application.properties 안에 설정해둔 DB정보에서 driver-class-name과 url을 아래와 같이 수정한다 [기준은 Oracle이다]
+
+spring.datasource.driver-class-name=net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+spring.datasource.url=jdbc:log4jdbc:oracle:thin:@localhost:1521/xe
+
+
+
+3. SQL 관련 정보중 어떠한 정보를 로그에 출력시킬지 아래와 같이 설정한다.
+
+설정의 상세 정보는 아래와 같습니다. 
+
+#jdbc.sqlonly - SQL 쿼리 문장만 로그로 남긴다. PreparedStatement일 경우 관련된 argument 값으로 대체된 SQL문이 보여진다.
+#jdbc.sqltiming - SQL문과 해당 SQL을 실행시키는데 수행된 시간 정보(milliseconds)를 포함한다.
+#jdbc.resultsettable - SQL 결과 조회된 데이터의 table을 로그로 남긴다.
+#jdbc.audit - ResultSet을 제외한 모든 JDBC 호출 정보를 로그로 남긴다. 많은 양의 로그가 생성되므로 특별히 JDBC 문제를 추적해야 할 필요가 있는 경우를 제외하고는 사용을 권장하지 않는다.
+#jdbc.resultset - ResultSet을 포함한 모든 JDBC 호출 정보를 로그로 남기므로 매우 방대한 양의 로그가 생성된다.
+
+ 
+
+4. application.properties가 있는 위치에 log4jdbc.log4j2.properties라는 이름의 파일을 하나 생성합니다.
+
+
+5. 생성한 log4jdbc.log4j2.properties 파일에 아래와 같은 내용을 작성합니다.
+
+log4jdbc.spylogdelegator.name=net.sf.log4jdbc.log.slf4j.Slf4jSpyLogDelegator
+log4jdbc.dump.sql.maxlinelength=0
+
+
+ 
+여기까지 Spring에서 실제 동작한 쿼리를 로그에 찍는법에 대하여 알아보았습니다.
+
+
+
+저랑 똑같이 설정한다면 결과는 위의 캡쳐와 같이 로그가 찍히게됩니다. 
+
+3번에서 작성한 설정 정보를 조금 수정하면 테이블 모양이나 실 데이터까지 로그에 찍어볼수도 있습니다.
+
+감사합니다.
