@@ -1,0 +1,50 @@
+저번 포스트에서 eval()의 보안상 문제점에 대하여 다루었는데요,
+
+그와 관련하여 이번 포스팅에서는 new Function()으로 대체하는 방법에대해 알아보겠습니다.
+
+이미지를 포함하여 좀더 가시성 있게 볼 수 있습니다. [ 링크 - https://lcoding.tistory.com/137 ]
+
+// 1. 간단한 식으로 된 예시
+// eval() 사용
+let resultEval = eval('2 + 3');
+console.log(resultEval); // 5
+
+// Function 생성자 사용
+let addFunction = new Function('return 2 + 3;');
+let resultFunction = addFunction();
+console.log(resultFunction); // 5
+
+
+
+// 2. 동적으로 생성된 함수 예시
+// eval() 사용
+let dynamicFunctionEval = eval('function dynamicAdd(a, b) { return a + b; }');
+let resultEval = dynamicFunctionEval(2, 3);
+console.log(resultEval); // 5
+
+// Function 생성자 사용
+let dynamicFunction = new Function('a', 'b', 'return a + b;');
+let resultFunction = dynamicFunction(2, 3);
+console.log(resultFunction); // 5
+
+
+// 3. 외부 변수 활용 예시
+// eval() 사용
+let x = 2;
+let y = 3;
+let resultEval = eval('x * y');
+console.log(resultEval); // 6
+
+// Function 생성자 사용
+let x = 2;
+let y = 3;
+let multiplyFunction = new Function('x', 'y', 'return x * y;');
+let resultFunction = multiplyFunction(x, y);
+console.log(resultFunction); // 6
+ 
+
+위의 세가지 예시와 같이 eval() -> new Function()으로 쉽게 대체할 수 있습니다.
+
+ 
+
+감사합니다.
