@@ -1,0 +1,52 @@
+이미지를 포함한 설명 링크 - https://lcoding.tistory.com/139
+
+
+안녕하세요,
+
+오늘은 IntelliJ에서 전체 파일 검색( Find in Files )기능의 최대 검색량을 변경하는 방법에 대하여 알아보겠습니다.
+
+실제 대형 프로젝트를 하다보면  "new ArrayList"나 "Service"등의 키워드로 검색을 한다면 몇천개 ~ 십만개이상의 데이터가 검색이 되기도 합니다.
+
+
+그런경우 인텔리제이의 Find in Files기능 [ Ctrl + Shift + F ]을 통하여 검색을 하게되는데요. 
+그런경우 100matches+ 혹은 500matches+ 라고 "+"표기만 되고 100개나 500개만 보여주는 경우가 있습니다.
+
+그런경우 제한을 늘리는 방법에 대하여 알아보겠습니다.
+
+ 
+
+ 
+
+설정 방법 -
+ 
+
+1. 인텔리제이의 Settings 기능 [ File -> Settings 또는  Ctrl + Alt + S ]
+ - 창을 킵니다.
+
+ 
+2. Settings의 검색에 Advanced Settings를 검색하신 후 제일 하단에 있는 Advanced Settings를 선택해줍니다.
+
+
+3. Advanced Settings탭 내에 있는 검색창에 maximum으로 검색하신 후 Find/Replace 칸 내에
+- Maximum number of results to show in Find in Files/Show Usages preview: [] 의 수치를 한번에 검색하고 싶은 양으로 변경해줍니다.
+
+ 
+3. 인텔리제이의 Find in Files 기능 [ Ctrl + Shift + F ]
+- 위의 설정 후 검색기능을 사용해보면 설정한 수치만큼 한번에 검색되는것을 알 수 있습니다.
+
+
+ 
+
+ 
+
+ 
+
+ 
+
+정리 - 
+검색되는 키워드가 수천개 이상일 경우에 메모리가 많이 사용된다(?)와 관련된 안내창이 뜨기때문에 저도 실무에서 평소엔 500~1000정도로 사용하다가 
+비슷한 여러데이터를 한번에 확인 해야하거나 하는 경우 오버라이드할 수 없는 경우에
+리팩토링 같은 경우에 일시적으로 20000정도까지 늘리기도 합니다.
+
+사양이나 상황에 맞게 적당히 늘려가며 사용하도록 하시기 바랍니다. 
+감사합니다. 
