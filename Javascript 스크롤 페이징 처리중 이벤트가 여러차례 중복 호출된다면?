@@ -1,0 +1,49 @@
+개발을 하다보면 Javascript 이벤트가 여러차례 중복 호출되는 현상을 만나본 적 있을 것입니다.
+
+저같은 경우 자바스크립트로 세로 스크롤을 맨 아래로 내렸을때 자동으로 "더보기"기능이 실행될 수 있도록 
+
+스크롤 페이징 작업을 수행하고있었습니다.
+
+그때 스크롤이 최하단 부분에 닿게 되었을 때 "더보기"버튼을 실행하는 Function이 10~20회가량 중복 호출이 되버리는 바람에 10개씩 더보기 되어야할 화면에 한번에 100~200개씩 중복 호출이 되는 현상을 맞이하게 되었습니다.
+
+이런 상황에서의 대처법을 알려드리겠습니다.  링크 - [ https://lcoding.tistory.com/145 ]
+
+
+1. 스크롤 이벤트를 디바운스(debounce) 처리하기
+디바운스는 연이어 호출되는 함수들 중에서 마지막 함수만 실행하도록 하는 기술입니다.
+
+이를 통해 스크롤 이벤트 발생 시 함수가 여러 번 호출되는 것을 방지할 수 있습니다.
+
+예를 들어, Lodash 라이브러리의 debounce 함수를 사용할 수 있습니다:
+
+const debounceScroll = _.debounce(yourFunction, 300); // 300ms 딜레이 후에 실행되도록 설정
+
+window.addEventListener('scroll', debounceScroll);​
+
+
+
+2. 한 번만 실행되도록 제어 변수 사용하기
+스크롤 이벤트가 발생할 때 함수가 실행되고, 다시 스크롤 이벤트를 기다리기 전에 플래그를 설정하여 함수가 실행 중인지 여부를 체크하는 방법입니다.
+
+let scrollInProgress = false;
+
+window.addEventListener('scroll', function() {
+    if (scrollInProgress) return;
+    
+    scrollInProgress = true;
+    
+    // 스크롤 처리 로직
+    
+    // 스크롤 처리가 완료된 후 플래그 재설정
+    setTimeout(function() {
+        scrollInProgress = false;
+    }, 500); // 적절한 시간(ms) 설정
+});
+ 
+
+
+ 
+
+위와 같이 반복 호출되지않도록 적절한 시간을 설정하는 방법으로 해당 상황을 대처할 수 있습니다.
+
+감사합니다.
